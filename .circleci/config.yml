@@ -1,0 +1,50 @@
+# version: 2.1
+
+# orbs:
+#   aws-ecr: circleci/aws-ecr@6.10.0
+#   aws-ecs: circleci/aws-ecs@1.2.0
+
+# workflows:
+#   build-and-deploy:
+#     jobs:
+#       # build-and-push to ECR
+#       - aws-ecr/build-and-push-image:
+#           account-url: AWS_ECR_ACCOUNT_URL
+#           repo: 'nginx-sample'
+#           tag: '${CIRCLE_SHA1}'
+
+#       # deploy-service to ECS
+#       - aws-ecs/deploy-service-update:
+#           family: 'nginx-sample-Task'          # Task Name
+#           service-name: 'nginx-sample-Service' # Service Name
+#           cluster-name: 'nginx-sample-Cluster' # cluster Name
+#           container-image-name-updates: 'container=nginx-sample,image-and-tag=${AWS_ECR_ACCOUNT_URL}/nginx-sample:${CIRCLE_SHA1}'
+
+#           requires:
+#             - aws-ecr/build-and-push-image
+#           filters:
+#             branches:
+#               only: master
+
+
+version: '2.1'
+orbs:
+  aws-ecr: circleci/aws-ecr@8.1.3
+workflows:
+  build_and_push_image:
+    jobs:
+      - aws-ecr/build-and-push-image:
+          repo: haproxy-scalable
+          tag: latest
+          name: Build and Push Docker Image
+          # account-url: AWS_ECR_ACCOUNT_URL
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          region: us-east-1
+          context: wordpress-test
+          registry-id: AWS_ECR_REGISTRY_ID
+          create-repo: true
+          dockerfile: Dockerfile
+          # no-output-timeout: 20m
+          path: .
+          profile-name: default

@@ -1,0 +1,45 @@
+version : '3'
+
+services:
+    lb:
+        image: haproxy
+        ports:
+            - "8080:8080"
+        volumes:
+            # - ./loadbalancer:/usr/local/etc/haproxy
+              - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+            #   - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+            #   - ./haproxy.cfg:/user/local/etc/haproxy/haproxy.cfg
+            # - ./loadbalancer:/loadbalancer
+            # - ./loadbalancer
+    ws1:
+        image: app
+        environment:
+            - APPID=1111
+            - APPPORT=8080
+            - REDIS_HOST=rds
+            - REDIS_PORT=6379
+
+    ws2:
+        image: app
+        environment:
+            - APPID=2222
+            - APPPORT=8080
+            - REDIS_HOST=rds
+            - REDIS_PORT=6379
+    ws3:
+        image: app
+        environment:
+            - APPID=3333
+            - APPPORT=8080
+            - REDIS_HOST=rds
+            - REDIS_PORT=6379
+    ws4:
+        image: app
+        environment:
+            - APPID=4444
+            - APPPORT=8080
+            - REDIS_HOST=rds
+            - REDIS_PORT=6379
+    rds:
+        image: redis
